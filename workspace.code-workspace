@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": "config"
+		},
+		{
+			"path": "authorizer"
+		},
+		{
+			"path": "account"
+		}
+	]
+}

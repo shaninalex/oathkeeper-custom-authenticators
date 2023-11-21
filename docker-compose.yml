@@ -1,0 +1,32 @@
+version: '3.7'
+
+services:
+  authorizer:
+    build: ./authorizer
+    container_name: authorizer
+    environment:
+      - PORT=5004
+    ports:
+      - 5004:5004
+    restart: always
+  
+  account:
+    build: ./account
+    container_name: account
+    restart: always
+    ports:
+      - 5003:5003
+    environment:
+      - PORT=5003
+  
+  oathkeeper:
+    image: oryd/oathkeeper:v0.40
+    ports:
+      - 8080:4455
+      - 4456:4456
+    command: serve proxy -c "/etc/config/oathkeeper/oathkeeper.yml"
+    environment:
+      - LOG_LEVEL=debug
+    restart: on-failure
+    volumes:
+      - ./config/oathkeeper/:/etc/config/oathkeeper

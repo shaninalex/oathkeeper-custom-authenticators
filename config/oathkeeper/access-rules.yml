@@ -1,0 +1,45 @@
+- id: "api:authorizer"
+  upstream:
+    preserve_host: true
+    url: "http://authorizer:5004"
+  match:
+    url: "http://localhost:8080/api/v1/authorizer/<**>"
+    methods:
+      - GET
+      - POST
+      - DELETE
+  authenticators:
+    - handler: noop
+  mutators:
+    - handler: noop
+  authorizer:
+    handler: allow
+
+- id: "api:account"
+  upstream:
+    preserve_host: true
+    url: "http://account:5003"
+  match:
+    url: "http://localhost:8080/api/v1/account/<**>"
+    methods:
+      - GET
+      - POST
+  authenticators:
+    - handler: bearer_token
+      config:
+        check_session_url: http://authorizer:5004/api/v1/authorizer/verify
+        token_from:
+          header: Authorization
+        preserve_path: true
+        preserve_query: true
+        extra_from: "@this"
+        forward_http_headers:
+          - Authorization
+  mutators:
+    - handler: header
+      enabled: true
+      config:
+        headers:
+          X-User: "{{ print .Subject }}"
+  authorizer:
+    handler: allow
