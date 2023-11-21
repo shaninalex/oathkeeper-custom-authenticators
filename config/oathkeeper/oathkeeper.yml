@@ -47,9 +47,14 @@ authenticators:
     enabled: true
     config:
       check_session_url: http://authorizer:5004/api/v1/authorizer/verify
-      subject_from: "@this.Subject"
       token_from:
         header: Authorization
+      preserve_path: true
+      preserve_query: true
+      extra_from: "@this"
+      subject_from: "@this.Subject"
+      forward_http_headers:
+        - Authorization
   noop:
     enabled: true
 
