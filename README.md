@@ -1,4 +1,4 @@
-# oauthkeeper-custom-authenticators
+# oathkeeper-custom-authenticators
 Example config of custom authenticator
 
 ### TODO:
